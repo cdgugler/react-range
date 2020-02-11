@@ -50,6 +50,7 @@ export interface IThumbProps {
 export interface ITrackProps {
   style: React.CSSProperties;
   ref: React.RefObject<any>;
+  steps: number[];
   onMouseDown: (e: React.MouseEvent) => void;
   onTouchStart: (e: React.TouchEvent) => void;
 }

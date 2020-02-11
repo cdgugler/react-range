@@ -13,6 +13,7 @@ import LeftDirection from '../examples/LeftDirection';
 import MultipleThumbs from '../examples/MultipleThumbs';
 import AllowOverlap from '../examples/AllowOverlap';
 import BigSteps from '../examples/BigSteps';
+import StyledSteps from '../examples/StyledSteps';
 import Labeled from '../examples/Labeled';
 import LabeledTwoThumbs from '../examples/LabeledTwoThumbs';
 import LabeledMerge from '../examples/LabeledMerge';
@@ -35,6 +36,7 @@ storiesOf('Range', module)
   .add('Multiple thumbs', () => <MultipleThumbs />)
   .add('Allow overlap', () => <AllowOverlap />)
   .add('Big steps', () => <BigSteps />)
+  .add('Styled steps', () => <StyledSteps />)
   .add('Labeled', () => <Labeled />)
   .add('Labeled two thumbs', () => <LabeledTwoThumbs/>)
   .add('Merging labels', () => <LabeledMerge />)

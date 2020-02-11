@@ -40,7 +40,8 @@ class Range extends React.Component<IProps> {
   state = {
     draggedThumbIndex: -1,
     thumbZIndexes: new Array(this.props.values.length).fill(0).map((t, i) => i),
-    isChanged: false
+    isChanged: false,
+    steps: []
   };
 
   constructor(props: IProps) {
@@ -72,6 +73,7 @@ class Range extends React.Component<IProps> {
       checkBoundaries(value, this.props.min, this.props.max)
     );
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
+    this.setSteps();
 
     values.forEach(value => {
       if (!isStepDivisible(min, value, step)) {
@@ -96,11 +98,36 @@ class Range extends React.Component<IProps> {
     document.removeEventListener('touchend', this.schdOnEnd as any);
   }
 
+  setSteps = () => {
+    const range = (start: number, stop: number, step = 1): number[] => {
+      return [
+        0,
+        ...Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => parseFloat((x + y * step).toFixed(2))),
+        stop
+      ];
+    }
+    const { min, max, step } = this.props;
+    const trackElement = this.trackRef.current!;
+    const trackRect = trackElement.getBoundingClientRect();
+    const width = trackRect.width;
+    const pixelSteps = width / ((max-min) / step);
+    let steps: number[] = [];
+
+    if (pixelSteps && width) {
+        steps = range(pixelSteps, width, pixelSteps);
+    }
+
+    this.setState({
+      steps: steps
+    });
+  }
+
   getOffsets = () => {
     const { direction, values, min, max } = this.props;
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
     const trackPadding = getPaddingAndBorder(trackElement);
+    console.log('getOffsets: ', trackRect.width);
     return this.getThumbs().map((thumb, index) => {
       const thumbOffsets = { x: 0, y: 0 };
       const thumbRect = thumb.getBoundingClientRect();
@@ -202,6 +229,7 @@ class Range extends React.Component<IProps> {
 
   onWindowResize = () => {
     translateThumbs(this.getThumbs(), this.getOffsets(), this.props.rtl);
+    this.setSteps();
   };
 
   onTouchStartTrack = (e: React.TouchEvent) => {
@@ -401,9 +429,14 @@ class Range extends React.Component<IProps> {
       min,
       max,
       allowOverlap,
-      disabled
+      disabled,
+      step
     } = this.props;
-    const { draggedThumbIndex, thumbZIndexes } = this.state;
+    const { draggedThumbIndex, thumbZIndexes, steps } = this.state;
+    // console.log('Step is: ', step);
+
+
+
 
     return renderTrack({
       props: {
@@ -420,6 +453,7 @@ class Range extends React.Component<IProps> {
         },
         onMouseDown: disabled ? voidFn : this.onMouseDownTrack,
         onTouchStart: disabled ? voidFn : this.onTouchStartTrack,
+        steps: steps,
         ref: this.trackRef
       },
       isDragged: this.state.draggedThumbIndex > -1,
