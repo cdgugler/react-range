@@ -127,7 +127,6 @@ class Range extends React.Component<IProps> {
     const trackElement = this.trackRef.current!;
     const trackRect = trackElement.getBoundingClientRect();
     const trackPadding = getPaddingAndBorder(trackElement);
-    console.log('getOffsets: ', trackRect.width);
     return this.getThumbs().map((thumb, index) => {
       const thumbOffsets = { x: 0, y: 0 };
       const thumbRect = thumb.getBoundingClientRect();
@@ -433,10 +432,6 @@ class Range extends React.Component<IProps> {
       step
     } = this.props;
     const { draggedThumbIndex, thumbZIndexes, steps } = this.state;
-    // console.log('Step is: ', step);
-
-
-
 
     return renderTrack({
       props: {
